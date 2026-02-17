@@ -4,7 +4,7 @@ Lightweight serverless API for creating and listing notes on AWS using Lambda,
 HTTP API Gateway, and DynamoDB. Built with TypeScript/Node.js 20 and bundled
 via esbuild.
 
-## Architecture (diagram)
+## Architecture
 
 ```
 [Client] -> [API Gateway HTTP API] -> [Lambda (handler.ts)] -> [DynamoDB table]
