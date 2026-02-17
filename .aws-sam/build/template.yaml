@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless Notes API (Lambda + HTTP API + DynamoDB)
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 10
+    MemorySize: 256
+    Architectures:
+    - arm64
+Resources:
+  NotesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: notes-table
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+  NotesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: NotesFunction
+      Handler: handler.handler
+      Runtime: nodejs20.x
+      Environment:
+        Variables:
+          NOTES_TABLE:
+            Ref: NotesTable
+          NODE_OPTIONS: ' --enable-source-maps'
+      Policies:
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: NotesTable
+      Events:
+        GetNotes:
+          Type: HttpApi
+          Properties:
+            Path: /notes
+            Method: GET
+        PostNotes:
+          Type: HttpApi
+          Properties:
+            Path: /notes
+            Method: POST
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        EntryPoints:
+        - src/handler.ts
+        Minify: true
+        Sourcemap: true
+        Target: es2022
+      SamResourceId: NotesFunction
+Outputs:
+  ApiUrl:
+    Description: HTTP API endpoint
+    Value:
+      Fn::Sub: https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com

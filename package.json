@@ -1,0 +1,19 @@
+{
+  "name": "serverless-notes",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "sam build",
+    "deploy": "sam deploy --guided"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.0.0",
+    "@aws-sdk/lib-dynamodb": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.0",
+    "@types/node": "^25.2.3",
+    "esbuild": "^0.27.3",
+    "typescript": "^5.0.0"
+  }
+}
